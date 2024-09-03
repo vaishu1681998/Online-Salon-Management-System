@@ -1,0 +1,11 @@
+spring.datasource.driver-class-name=com.mysql.cj.jdbc.Driver
+spring.datasource.url = jdbc:mysql://localhost:3306/onlinesalondb
+spring.datasource.username=root
+spring.datasource.password=Prince@98
+spring.jpa.show-sql=true
+spring.jpa.hibernate.ddl-auto=create
+spring.jpa.properties.hibernate.dialect=org.hibernate.dialect.MySQLDialect
+
+server.port=9095
+# Application Name
+spring.application.name=authenticationSecurity

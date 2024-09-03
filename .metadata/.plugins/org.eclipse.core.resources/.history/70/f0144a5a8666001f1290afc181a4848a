@@ -1,0 +1,72 @@
+package com.app.service;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
+
+import org.modelmapper.ModelMapper;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+
+import com.app.Dto.ServicesDto;
+import com.app.entity.Services;
+import com.app.repository.ServiceRepository;
+
+@Service
+public class ServicesServiceImpl implements ServicesService{
+
+	@Autowired
+	private ServiceRepository servicerepository;
+	
+	@Autowired
+	private ModelMapper modelMapper;
+	
+	@Override
+	public ServicesDto createServices(ServicesDto servicesDto) {
+		// TODO Auto-generated method stub
+		Services services = modelMapper.map(servicesDto, Services.class);
+		Services saveservice = servicerepository.save(services);
+		return modelMapper.map(saveservice, ServicesDto.class);
+	}
+
+	@Override
+	public ServicesDto getServiceById(long id) {
+		// TODO Auto-generated method stub
+		Optional<Services> services = servicerepository.findById(id);
+		return modelMapper.map(services, ServicesDto.class);
+	}
+
+	@Override
+	public List<ServicesDto> getAllServices() {
+	    Iterable<Services> servicesIterable = servicerepository.findAll();
+	    List<Services> services = new ArrayList<>();
+	    servicesIterable.forEach(services::add);  // Convert Iterable to List
+	    
+	    return services.stream()
+	                   .map(service -> modelMapper.map(service, ServicesDto.class))
+	                   .collect(Collectors.toList());
+	}
+
+	@Override
+	public void deleteServices(Long id) {
+		// TODO Auto-generated method stub
+		Services service = servicerepository.findById(id).orElseThrow(() -> new RuntimeException("Services not find by id: "+id));
+		servicerepository.delete(service);
+	}
+
+	@Override
+	public ServicesDto updateServices(long id, ServicesDto servicesDto) {
+		// TODO Auto-generated method stub
+		Services existingServices = servicerepository.findById(id).orElseThrow(() -> new RuntimeException("Services not find by id: "+id));
+		
+		existingServices.setName(servicesDto.getName());
+		existingServices.setPrice(servicesDto.getPrice());
+		existingServices.setRole(servicesDto.getRole());
+		
+		Services updateServices = servicerepository.save(existingServices);
+		return modelMapper.map(updateServices, ServicesDto.class);
+	}
+
+
+}
